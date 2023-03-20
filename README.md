@@ -16,7 +16,7 @@ SpeechGPT is a GPT powered and voice-enabled Turkish chatbot mobile application.
 
 <br/>
 
-# Contributors
+# Authors
 - Yunus Emre Kepenek
 - Buse Petek Kaya
 - Sıla Döndü Açıkgöz
