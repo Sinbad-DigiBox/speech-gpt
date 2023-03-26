@@ -6,6 +6,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.12.1",
     "expo": "^48.0.4",
     "expo-constants": "~14.2.1",
     "expo-linking": "~4.0.1",

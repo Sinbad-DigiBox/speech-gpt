@@ -1,61 +1,69 @@
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-  Alert,
-} from "react-native";
+import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
 import Spacing from "../constants/Spacing";
 import FontSize from "../constants/FontSize";
 import Colors from "../constants/Colors";
 import Font from "../constants/Font";
 import { Ionicons } from "@expo/vector-icons";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../types";
 import AppTextInput from "../components/AppTextInput";
-import { createClient } from "@supabase/supabase-js";
+import { Alert } from "react-native";
 import { SupabaseClient } from "@supabase/supabase-js";
 
-type Props = NativeStackScreenProps<RootStackParamList, "Login">;
-
-const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
+const RegisterScreen = ({ navigation: { navigate } }) => {
   const SUPABASE_URL = "https://sxurjxssvmgdarviwqpe.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN4dXJqeHNzdm1nZGFydml3cXBlIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzkyMTkwNDYsImV4cCI6MTk5NDc5NTA0Nn0.HH74Mk7rPGcIbQN6Kvu1JfJVKbPdt0urUcyid1lJHhg";
+  const SUPABASE_ANON_KEY =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN4dXJqeHNzdm1nZGFydml3cXBlIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzkyMTkwNDYsImV4cCI6MTk5NDc5NTA0Nn0.HH74Mk7rPGcIbQN6Kvu1JfJVKbPdt0urUcyid1lJHhg";
 
-const supabase = new SupabaseClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const supabase = new SupabaseClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-const [email, setEmail] = useState("");
-const [password, setPassword] = useState("");
-
-const handleSignIn = async () => {
-  console.log("handleSignIn called"); // Bu satırı ekleyin
-
-  try {
-    const { user, error } = await supabase.auth.signIn({
-      email,
-      password,
-    });
-
-    console.log("signIn response", user, error); // Bu satırı ekleyin
-
-    if (error) {
-      throw error;
+  const handleSignUp = async () => {
+    if (password !== confirmPassword) {
+      Alert.alert(
+        "Error",
+        "Şifreler eşleşmiyor. Lütfen şifreleri kontrol edin."
+      );
+      return;
     }
 
-    if (user) {
-      navigate("Home");
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      if (data) {
+        Alert.alert(
+          "Success",
+          "Kaydınız başarıyla oluşturuldu. Lütfen e-postanızı kontrol edip hesabınızı doğrulayın.",
+          [
+            {
+              text: "OK",
+              onPress: () => {
+                navigate("Login");
+              },
+            },
+          ]
+        );
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert("Error", error.message);
+      } else {
+        Alert.alert(
+          "Error",
+          "Bir hata oluştu. Lütfen daha sonra tekrar deneyin."
+        );
+      }
     }
-  } catch (error) {
-    if (error instanceof Error) {
-      Alert.alert("Error", error.message);
-    } else {
-      Alert.alert("Error", "Bir hata oluştu. Lütfen daha sonra tekrar deneyin.");
-    }
-  }
-};
+  };
+
   return (
     <SafeAreaView>
       <View
@@ -76,52 +84,35 @@ const handleSignIn = async () => {
               marginVertical: Spacing * 3,
             }}
           >
-            Hoş Geldin!
-          </Text>
-          <Text
-            style={{
-              fontFamily: Font["poppins-semiBold"],
-              fontSize: FontSize.large,
-              maxWidth: "60%",
-              textAlign: "center",
-            }}
-          >
-            Geri döndüğüne sevindik!
+            Kayıt Ol
           </Text>
         </View>
         <View
-  style={{
-    marginVertical: Spacing * 3,
-  }}
->
-  <AppTextInput
-    placeholder="Email"
-    value={email}
-    onChangeText={setEmail}
-  />
-  <AppTextInput
-    placeholder="Şifre"
-    value={password}
-    onChangeText={setPassword}
-    secureTextEntry
-  />
-</View>
-
-        <View>
-          <Text
-            style={{
-              fontFamily: Font["poppins-semiBold"],
-              fontSize: FontSize.small,
-              color: Colors.primary,
-              alignSelf: "flex-end",
-            }}
-          >
-            Şifremi Unuttum
-          </Text>
+          style={{
+            marginVertical: Spacing * 3,
+          }}
+        >
+          <AppTextInput
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+          />
+          <AppTextInput
+            placeholder="Şifre"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
+          <AppTextInput
+            placeholder="Şifreyi Onayla"
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            secureTextEntry
+          />
         </View>
 
         <TouchableOpacity
-        onPress={handleSignIn}
+          onPress={handleSignUp}
           style={{
             padding: Spacing * 2,
             backgroundColor: Colors.primary,
@@ -144,11 +135,11 @@ const handleSignIn = async () => {
               fontSize: FontSize.large,
             }}
           >
-            Giriş Yap
+            Kayıt Ol
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => navigate("Register")}
+          onPress={() => navigate("Login")}
           style={{
             padding: Spacing,
           }}
@@ -161,7 +152,7 @@ const handleSignIn = async () => {
               fontSize: FontSize.small,
             }}
           >
-            Yeni bir hesap oluştur
+            Zaten bir hesabım var
           </Text>
         </TouchableOpacity>
 
@@ -178,7 +169,7 @@ const handleSignIn = async () => {
               fontSize: FontSize.small,
             }}
           >
-            Başka bir giriş yöntemi ile devam et
+            Veya aşağıdaki seçeneklerden birisi ile devam et
           </Text>
 
           <View
@@ -237,6 +228,4 @@ const handleSignIn = async () => {
   );
 };
 
-export default LoginScreen;
-
-const styles = StyleSheet.create({});
+export default RegisterScreen;

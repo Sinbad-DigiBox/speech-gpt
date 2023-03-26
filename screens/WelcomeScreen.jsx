@@ -12,13 +12,9 @@ import Spacing from "../constants/Spacing";
 import FontSize from "../constants/FontSize";
 import Colors from "../constants/Colors";
 import Font from "../constants/Font";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../types";
 const { height } = Dimensions.get("window");
 
-type Props = NativeStackScreenProps<RootStackParamList, "Welcome">;
-
-const WelcomeScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
+const WelcomeScreen = ({ navigation: { navigate } }) => {
   return (
     <SafeAreaView>
       <View>

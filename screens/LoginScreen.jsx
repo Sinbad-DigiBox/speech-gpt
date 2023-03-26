@@ -2,9 +2,9 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import Spacing from "../constants/Spacing";
@@ -12,64 +12,49 @@ import FontSize from "../constants/FontSize";
 import Colors from "../constants/Colors";
 import Font from "../constants/Font";
 import { Ionicons } from "@expo/vector-icons";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../types";
 import AppTextInput from "../components/AppTextInput";
-import { Alert } from "react-native";
-
 import { SupabaseClient } from "@supabase/supabase-js";
 
-type Props = NativeStackScreenProps<RootStackParamList, "Register">;
-
-const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
+const LoginScreen = ({ navigation: { navigate } }) => {
   const SUPABASE_URL = "https://sxurjxssvmgdarviwqpe.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN4dXJqeHNzdm1nZGFydml3cXBlIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzkyMTkwNDYsImV4cCI6MTk5NDc5NTA0Nn0.HH74Mk7rPGcIbQN6Kvu1JfJVKbPdt0urUcyid1lJHhg";
+  const SUPABASE_ANON_KEY =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN4dXJqeHNzdm1nZGFydml3cXBlIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzkyMTkwNDYsImV4cCI6MTk5NDc5NTA0Nn0.HH74Mk7rPGcIbQN6Kvu1JfJVKbPdt0urUcyid1lJHhg";
 
   const supabase = new SupabaseClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSignUp = async () => {
-    if (password !== confirmPassword) {
-      Alert.alert("Error", "Şifreler eşleşmiyor. Lütfen şifreleri kontrol edin.");
-      return;
-    }
-  
+  const handleSignIn = async () => {
+    console.log("handleSignIn called"); // Bu satırı ekleyin
+
     try {
-      const { data, error } = await supabase.auth.signUp({
+      const { user, error } = await supabase.auth.signIn({
         email,
         password,
       });
-  
+
+      console.log("signIn response", user, error); // Bu satırı ekleyin
+
       if (error) {
         throw error;
       }
-  
-      if (data) {
-        Alert.alert(
-          "Success",
-          "Kaydınız başarıyla oluşturuldu. Lütfen e-postanızı kontrol edip hesabınızı doğrulayın.",
-          [
-            {
-              text: "OK",
-              onPress: () => {
-                navigate("Login");
-              },
-            },
-          ]
-        );
+
+      console.log("Success");
+      if (user) {
+        navigate("Home");
       }
     } catch (error) {
       if (error instanceof Error) {
         Alert.alert("Error", error.message);
       } else {
-        Alert.alert("Error", "Bir hata oluştu. Lütfen daha sonra tekrar deneyin.");
+        Alert.alert(
+          "Error",
+          "Bir hata oluştu. Lütfen daha sonra tekrar deneyin."
+        );
       }
     }
   };
-  
-  
 
   return (
     <SafeAreaView>
@@ -91,7 +76,17 @@ const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
               marginVertical: Spacing * 3,
             }}
           >
-            Kayıt Ol
+            Hoş Geldin!
+          </Text>
+          <Text
+            style={{
+              fontFamily: Font["poppins-semiBold"],
+              fontSize: FontSize.large,
+              maxWidth: "60%",
+              textAlign: "center",
+            }}
+          >
+            Geri döndüğüne sevindik!
           </Text>
         </View>
         <View
@@ -110,16 +105,23 @@ const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
             onChangeText={setPassword}
             secureTextEntry
           />
-          <AppTextInput
-            placeholder="Şifreyi Onayla"
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            secureTextEntry
-          />
+        </View>
+
+        <View>
+          <Text
+            style={{
+              fontFamily: Font["poppins-semiBold"],
+              fontSize: FontSize.small,
+              color: Colors.primary,
+              alignSelf: "flex-end",
+            }}
+          >
+            Şifremi Unuttum
+          </Text>
         </View>
 
         <TouchableOpacity
-          onPress={handleSignUp}
+          onPress={handleSignIn}
           style={{
             padding: Spacing * 2,
             backgroundColor: Colors.primary,
@@ -142,11 +144,11 @@ const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
               fontSize: FontSize.large,
             }}
           >
-            Kayıt Ol
+            Giriş Yap
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => navigate("Login")}
+          onPress={() => navigate("Register")}
           style={{
             padding: Spacing,
           }}
@@ -159,10 +161,10 @@ const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
               fontSize: FontSize.small,
             }}
           >
-            Zaten bir hesabım var
+            Yeni bir hesap oluştur
           </Text>
         </TouchableOpacity>
-    
+
         <View
           style={{
             marginVertical: Spacing * 3,
@@ -176,9 +178,9 @@ const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
               fontSize: FontSize.small,
             }}
           >
-            Veya aşağıdaki seçeneklerden birisi ile devam et
+            Başka bir giriş yöntemi ile devam et
           </Text>
-    
+
           <View
             style={{
               marginTop: Spacing,
@@ -235,4 +237,6 @@ const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
   );
 };
 
-export default RegisterScreen;
+export default LoginScreen;
+
+const styles = StyleSheet.create({});
