@@ -13,38 +13,30 @@ import Colors from "../constants/Colors";
 import Font from "../constants/Font";
 import { Ionicons } from "@expo/vector-icons";
 import AppTextInput from "../components/AppTextInput";
-import { SupabaseClient } from "@supabase/supabase-js";
+import { supabase } from "../initalizeSupabase";
 
 const LoginScreen = ({ navigation: { navigate } }) => {
-  const SUPABASE_URL = "https://sxurjxssvmgdarviwqpe.supabase.co";
-  const SUPABASE_ANON_KEY =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN4dXJqeHNzdm1nZGFydml3cXBlIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzkyMTkwNDYsImV4cCI6MTk5NDc5NTA0Nn0.HH74Mk7rPGcIbQN6Kvu1JfJVKbPdt0urUcyid1lJHhg";
-
-  const supabase = new SupabaseClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSignIn = async () => {
-    console.log("handleSignIn called"); // Bu satırı ekleyin
+    console.log("handleSignIn called");
 
     try {
-      const { user, error } = await supabase.auth.signIn({
+      console.log(supabase);
+      const user = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      console.log("signIn response", user, error); // Bu satırı ekleyin
+      console.log("signIn response", user);
 
-      if (error) {
-        throw error;
-      }
-
-      console.log("Success");
+      console.log(user);
       if (user) {
         navigate("Home");
       }
     } catch (error) {
+      console.log(error);
       if (error instanceof Error) {
         Alert.alert("Error", error.message);
       } else {
