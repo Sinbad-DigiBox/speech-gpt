@@ -1,12 +1,34 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 serve(async (req) => {
-  const { name } = await req.json();
+  const { content } = await req.json();
   const data = {
-    message: `Hello ${name}!`,
+    input: {
+      text: content,
+    },
+    voice: {
+      languageCode: "tr-TR",
+      name: "tr-TR-Standard-E",
+      ssmlGender: "MALE",
+    },
+    audioConfig: {
+      audioEncoding: "MP3",
+    },
   };
 
-  return new Response(JSON.stringify(data), {
+  const key = Deno.env.get("GOOGLE_KEY");
+  const googleResponse = await fetch(
+    "https://texttospeech.googleapis.com/v1/text:synthesize?key=" + key,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }
+  ).then((res) => res.json());
+
+  return new Response(JSON.stringify(googleResponse), {
     headers: { "Content-Type": "application/json" },
   });
 });

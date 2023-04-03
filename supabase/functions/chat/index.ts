@@ -6,7 +6,7 @@ serve(async (req) => {
   const { content } = await req.json();
 
   const configuration = new Configuration({
-    apiKey: Deno.env.get("API_KEY"),
+    apiKey: Deno.env.get("GPT_KEY"),
   });
   const openai = new OpenAIApi(configuration);
   const completion = await openai
