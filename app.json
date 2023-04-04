@@ -1,10 +1,38 @@
 {
   "expo": {
-    "scheme": "acme",
-    "web": {
-      "bundler": "metro"
+    "name": "YTOnboardingApp",
+    "slug": "YTOnboardingApp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
     },
-    "name": "speech-gpt",
-    "slug": "speech-gpt"
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.yuuns.YTOnboardingApp"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "f11fda1b-2eb9-4d18-8034-2e546eda426e"
+      }
+    }
   }
 }
