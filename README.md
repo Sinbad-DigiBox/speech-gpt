@@ -1,28 +1,24 @@
-# Create T3 App
+<img src="https://user-images.githubusercontent.com/42357900/226164504-52b1842b-64fa-41e5-ade2-a51e3d0bec6d.png" width=150 height=150 />
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+# SpeechGPT - Voice-Enabled Chatbot
+SpeechGPT is a GPT powered and voice-enabled Turkish chatbot mobile application.
 
-## What's next? How do I make an app with this?
+<br/>
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+# Tech Stack
+<div>
+  <img src="https://user-images.githubusercontent.com/42357900/218828330-592fc93d-d58f-4c78-95dd-4c48967a1619.png" height=60 />
+  <img src="https://user-images.githubusercontent.com/42357900/226164695-df8c569e-30d8-46a5-a09e-2335941c7c53.png" height=60 />
+  <img src="https://user-images.githubusercontent.com/42357900/226166289-43c275aa-6d30-4d1c-a958-a3f6ee1870d1.png" height=60 />
+  <img src="https://user-images.githubusercontent.com/42357900/226164615-5feee19b-5173-432c-8424-d6d2dc199f76.png" height=60 />
+  <img src="https://user-images.githubusercontent.com/42357900/226166340-ed193c3b-3684-48d4-b9a5-f7e98541d06e.png" height=60 />
+</div>
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+<br/>
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
-
-## Learn More
-
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
-
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
-
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
-
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+# Authors
+- Yunus Emre Kepenek
+- Buse Petek Kaya
+- Sıla Döndü Açıkgöz
+- Fırat Can Bozkurt
+- Furkan Adıktı
