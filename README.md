@@ -8,8 +8,8 @@ SpeechGPT is a GPT powered and voice-enabled Turkish chatbot mobile application.
 # Tech Stack
 <div>
   <img src="https://user-images.githubusercontent.com/42357900/218828330-592fc93d-d58f-4c78-95dd-4c48967a1619.png" height=60 />
-  <img src="https://user-images.githubusercontent.com/42357900/226164695-df8c569e-30d8-46a5-a09e-2335941c7c53.png" height=60 />
-  <img src="https://user-images.githubusercontent.com/42357900/226166289-43c275aa-6d30-4d1c-a958-a3f6ee1870d1.png" height=60 />
+  <img src="https://user-images.githubusercontent.com/42357900/218829328-e4d13281-93bf-488d-a36e-29a8c44580e1.svg" height=60 />
+  <img src="https://user-images.githubusercontent.com/42357900/235375104-2912537a-aec4-4e93-8176-7e60c3a5b0a7.png" height=60 />
   <img src="https://user-images.githubusercontent.com/42357900/226164615-5feee19b-5173-432c-8424-d6d2dc199f76.png" height=60 />
   <img src="https://user-images.githubusercontent.com/42357900/226166340-ed193c3b-3684-48d4-b9a5-f7e98541d06e.png" height=60 />
 </div>
