@@ -5,17 +5,51 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import Header from "~/components/Header";
 import Mic from "../../public/Mic.svg";
+import Message from "../components/Message";
+import { PrismaClient } from "@prisma/client";
+import { Prisma } from "@prisma/client";
+import { get } from "http";
+import { prisma } from "../server/db";
+import getMessageHistory from "./api/message/get";
+import axios from "axios";
+import Spinner from "../../public/spinner.svg";
 
 const Home: NextPage = () => {
   const scrollTo = useRef<HTMLDivElement>(null);
   const [message, setMessage] = useState<string>("");
-
+  const [ht, setHt] = useState<string[]>();
   const chunks: Blob[] = [];
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     scrollTo.current?.scrollIntoView();
+    getMessageHistory("1", "1").then(() =>
+      setInterval(() => {
+        setLoaded(true);
+      }, 2000)
+    );
+
+    /* 
+    @getMessageHistory function takes 2 parameter => userId & charId
+    Related to current user, provide the userId. And charId for each character.
+
+    sample arguments =>    1,1               1,2             1,3
+                      userId/charId     userId/charId   userId/charId
+    */
   }, []);
 
+  const getMessageHistory = async (userId: string, charId: string) => {
+    try {
+      const history = await axios.post("/api/message/get", {
+        userId: userId,
+        charId: charId,
+      });
+      setHt(history.data);
+      /*console.log(ht);*/
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
   const record = () => {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices
@@ -96,36 +130,20 @@ const Home: NextPage = () => {
             className="flex transform-gpu flex-col gap-y-8 overflow-y-scroll px-14"
             id="scrollbar-hide"
           >
-            <div className="ml-auto w-8/12 rounded-3xl rounded-br-none bg-sky-900 px-4 py-3 text-xl text-white">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </div>
-            <div className="mr-auto w-10/12 rounded-3xl rounded-tl-none bg-white px-4 py-3 text-xl text-sky-900">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </div>
-            <div className="ml-auto w-8/12 rounded-3xl rounded-br-none bg-sky-900 px-4 py-3 text-xl text-white">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </div>
-            <div className="mr-auto w-10/12 rounded-3xl rounded-tl-none bg-white px-4 py-3 text-xl text-sky-900">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </div>
-            <div className="ml-auto w-8/12 rounded-3xl rounded-br-none bg-sky-900 px-4 py-3 text-xl text-white">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </div>
-            <div className="mr-auto w-10/12 rounded-3xl rounded-tl-none bg-white px-4 py-3 text-xl text-sky-900">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </div>
-            <div className="ml-auto w-8/12 rounded-3xl rounded-br-none bg-sky-900 px-4 py-3 text-xl text-white">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </div>
-            <div ref={scrollTo}></div>
+            {loaded ? (
+              ht?.map((e) => (
+                <>
+                  <Message type={0} message={e.message} />
+                  <Message type={1} message={e.response} />
+                </>
+              ))
+            ) : (
+              <div className="grid h-screen place-items-center">
+                <Image src={Spinner} alt={"Spinner"} width={48} height={48} />
+              </div>
+            )}
           </div>
+
           <div className="mx-auto flex w-3/4 items-center justify-center gap-x-4">
             <Image
               src={Mic}
