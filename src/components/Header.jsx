@@ -30,7 +30,7 @@ export default async function Header() {
         />
       </Link>
       <Link href="/" className="mr-4">
-        <div className="flex items-center space-x-2 text-lg">
+        <div className="flex items-center gap-x-2 text-lg">
           <UserCircleIcon className="h-10 w-10" />
           <h2>{user.name}</h2>
         </div>

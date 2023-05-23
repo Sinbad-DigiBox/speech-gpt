@@ -1,6 +1,4 @@
 import Image from "next/image";
-import { Bars3BottomLeftIcon } from "@heroicons/react/24/solid";
-import Link from "next/link";
 
 export default function Character({ character }) {
   return (
@@ -9,13 +7,14 @@ export default function Character({ character }) {
         <Image
           src={`/characters/${character.id}.png`}
           width={450}
-          height={500}
+          height={600}
           className="pointer-events-none relative mx-auto"
-          alt="Character icon"
+          alt="Character portrait"
+          priority
         />
         <div className="absolute bottom-0 z-10 h-24 w-full bg-gradient-to-t from-white to-transparent dark:from-background" />
       </div>
-      <div className="flex flex-col space-y-1 py-4 text-center">
+      <div className="space-y-1 py-4 text-center">
         <h1 className="text-3xl">
           {character.name.toLocaleUpperCase("tr-TR")}
         </h1>

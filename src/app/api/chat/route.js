@@ -11,7 +11,14 @@ export async function POST(req) {
   const completion = await openai
     .createChatCompletion({
       model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: content }],
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a poet. Answer all the questions as a short Poe. Give the answers in Turkish.",
+        },
+        { role: "user", content: content },
+      ],
     })
     .then((res) => {
       return res.data.choices[0];

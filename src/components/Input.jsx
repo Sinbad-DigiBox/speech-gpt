@@ -1,15 +1,20 @@
 "use client";
 
-import { MicrophoneIcon, PaperAirplaneIcon } from "@heroicons/react/24/solid";
+import {
+  MicrophoneIcon,
+  PaperAirplaneIcon,
+  StopIcon,
+} from "@heroicons/react/24/solid";
 import Image from "next/image";
 import { useEffect, useReducer, useRef, useState } from "react";
 
-export default function Input() {
+export default function Input({ insertMessage, generating }) {
   const [message, setMessage] = useState("");
   const [recording, setRecording] = useState(false);
   const [timer, dispatch] = useReducer(reducer, 0);
   const interval = useRef();
   const audioCtxContainer = useRef();
+  const mediaRecorder = useRef();
   const chunks = [];
 
   useEffect(() => {
@@ -30,22 +35,6 @@ export default function Input() {
     throw Error("Unknown action.");
   }
 
-  const generateAnswer = async () => {
-    const response = await fetch("http://localhost:3000/api/chat", {
-      method: "POST",
-      body: JSON.stringify({
-        content: message,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      cache: "no-cache",
-    });
-
-    const answer = await response.json();
-    return answer;
-  };
-
   const handleInput = (e) => {
     e.preventDefault();
     setMessage(e.target.value);
@@ -53,14 +42,19 @@ export default function Input() {
 
   const handleSubmit = async (e) => {
     if (!message) return;
+    if (generating.current) return;
     setMessage("");
-    // TODO const answer = await generateAnswer();
+    insertMessage(message);
   };
 
   const startTimer = () => {
     interval.current = setInterval(() => {
       dispatch({ type: "increment" });
     }, 1000);
+  };
+
+  const stopRecord = () => {
+    mediaRecorder.current.stop();
   };
 
   const record = () => {
@@ -71,21 +65,22 @@ export default function Input() {
           audio: true,
         })
         .then((stream) => {
-          const mediaRecorder = new MediaRecorder(stream);
+          mediaRecorder.current = new MediaRecorder(stream);
 
-          if (mediaRecorder.state == "recording") return;
-          mediaRecorder.start();
+          if (mediaRecorder.current.state == "recording") return;
+          mediaRecorder.current.start();
           setRecording(true);
           startTimer();
 
           setTimeout(() => {
-            mediaRecorder.stop();
+            mediaRecorder.current.stop();
+          }, 7000);
+
+          mediaRecorder.current.onstop = async (e) => {
             dispatch({ type: "reset" });
             clearInterval(interval.current);
             interval.current = null;
-          }, 7000);
 
-          mediaRecorder.onstop = async (e) => {
             const buffer = new Blob(chunks, { type: "audio/mp3; codecs=opus" });
 
             let base64 = "";
@@ -112,7 +107,7 @@ export default function Input() {
             };
           };
 
-          mediaRecorder.ondataavailable = async (e) => {
+          mediaRecorder.current.ondataavailable = async (e) => {
             chunks.push(e.data);
           };
         })
@@ -125,7 +120,7 @@ export default function Input() {
   };
 
   return (
-    <div className="group flex items-center space-x-5">
+    <div className="flex items-center gap-x-5">
       <div
         className={`relative flex w-full items-center justify-center gap-x-4 overflow-hidden rounded-full border-2 pr-4 after:absolute after:right-0 after:z-10 after:h-full after:w-full after:rounded-full after:bg-white after:duration-300 after:content-[''] ${
           recording ? `after:translate-x-0` : `after:translate-x-full`
@@ -149,7 +144,7 @@ export default function Input() {
           }`}
         >
           {interval.current ? (
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-x-2">
               <svg
                 className="h-3 w-3 animate-pulse"
                 viewBox="0 0 100 100"
@@ -175,12 +170,17 @@ export default function Input() {
             <Image src="/loading.svg" alt="Spinner" width={35} height={35} />
           )}
         </div>
-        <MicrophoneIcon
-          onClick={record}
-          className={`z-20 h-10 w-10 cursor-pointer duration-300 ${
-            recording && "text-black"
-          }`}
-        />
+        {recording ? (
+          <StopIcon
+            onClick={stopRecord}
+            className="z-20 h-10 w-10 cursor-pointer text-black duration-300"
+          />
+        ) : (
+          <MicrophoneIcon
+            onClick={record}
+            className="z-20 h-10 w-10 cursor-pointer duration-300"
+          />
+        )}
       </div>
       <div
         onClick={(e) => handleSubmit(e)}

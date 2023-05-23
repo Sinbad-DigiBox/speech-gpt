@@ -1,5 +1,6 @@
 import Character from "@/components/Character";
 import Chat from "@/components/Chat";
+import ChatBox from "@/components/ChatBox";
 import Input from "@/components/Input";
 
 export default async function Home() {
@@ -16,9 +17,8 @@ export default async function Home() {
         <div className="w-1/2">
           <Character character={character} />
         </div>
-        <div className="flex w-1/2 flex-col">
-          <Chat firstMessage={character.firstMessage} />
-          <Input />
+        <div className="flex h-[44rem] w-1/2 flex-col space-y-20">
+          <ChatBox firstMessage={character.firstMessage} />
         </div>
       </div>
     </main>
