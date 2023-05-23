@@ -10,6 +10,7 @@ export default function Character({ character }) {
           height={600}
           className="pointer-events-none relative mx-auto"
           alt="Character portrait"
+          quality={100}
           priority
         />
         <div className="absolute bottom-0 z-10 h-24 w-full bg-gradient-to-t from-white to-transparent dark:from-background" />

@@ -35,14 +35,34 @@ export default function ChatBox({ firstMessage }) {
       inserted.push(newMsg);
       setHistory(inserted);
       generating.current = false;
+
+      fetch("http://localhost:3000/api/message/add", {
+        method: "POST",
+        body: JSON.stringify({
+          content: message,
+          response: answer.message.content,
+          userId: 1,
+          charId: 1,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
     });
   };
 
   const generateAnswer = async (prompt) => {
+    const previousMessages = [];
+    history.forEach((e) => {
+      previousMessages.push({ role: "user", content: e.content });
+      previousMessages.push({ role: "assistant", content: e.response });
+    });
+
     const response = await fetch("http://localhost:3000/api/chat", {
       method: "POST",
       body: JSON.stringify({
         content: prompt,
+        history: previousMessages,
       }),
       headers: {
         "Content-Type": "application/json",

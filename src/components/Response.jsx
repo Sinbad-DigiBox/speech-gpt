@@ -16,7 +16,7 @@ export default function Response({ message }) {
             alt="Message loading spinner"
           />
         ) : (
-          message
+          <p className="whitespace-pre-line">{message}</p>
         )}
       </div>
       <SpeakerWaveIcon className="h-5 w-5 cursor-pointer" />
