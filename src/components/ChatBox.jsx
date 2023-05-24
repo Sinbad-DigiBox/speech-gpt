@@ -12,7 +12,7 @@ export default function ChatBox({ firstMessage }) {
   useEffect(() => {
     const fetchMessages = async () => {
       const messages = await fetch(
-        "http://localhost:3000/api/message/get?user=1&char=1",
+        "https://speech-dm376v9qc-yuuns.vercel.app/api/message/get?user=1&char=1",
         {
           headers: {
             "Content-Type": "application/json",
@@ -42,7 +42,7 @@ export default function ChatBox({ firstMessage }) {
 
           new Audio(`data:audio/ogg;base64,${audio}`).play();
 
-          fetch("http://localhost:3000/api/message/add", {
+          fetch("https://speech-dm376v9qc-yuuns.vercel.app/api/message/add", {
             method: "POST",
             body: JSON.stringify({
               content: message,
@@ -66,31 +66,37 @@ export default function ChatBox({ firstMessage }) {
       previousMessages.push({ role: "assistant", content: e.response });
     });
 
-    const response = await fetch("http://localhost:3000/api/chat", {
-      method: "POST",
-      body: JSON.stringify({
-        content: prompt,
-        history: previousMessages,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      "https://speech-dm376v9qc-yuuns.vercel.app/api/chat",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          content: prompt,
+          history: previousMessages,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     const answer = await response.json();
     return answer;
   };
 
   const generateSpeech = async (content) => {
-    const response = await fetch("http://localhost:3000/api/tts", {
-      method: "POST",
-      body: JSON.stringify({
-        content,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      "https://speech-dm376v9qc-yuuns.vercel.app/api/tts",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          content,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     const answer = await response.json();
     return answer;

@@ -4,11 +4,14 @@ import { UserCircleIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 
 export default async function Header() {
-  const user = await fetch("http://localhost:3000/api/user/get?id=1", {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }).then(async (res) => await res.json());
+  const user = await fetch(
+    "https://speech-dm376v9qc-yuuns.vercel.app/api/user/get?id=1",
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  ).then(async (res) => await res.json());
 
   return (
     <header className="flex w-full items-center justify-between">
