@@ -2,14 +2,11 @@ import Character from "@/components/Character";
 import ChatBox from "@/components/ChatBox";
 
 export default async function Home() {
-  const character = await fetch(
-    "https://speech-dm376v9qc-yuuns.vercel.app/api/char/get?id=1",
-    {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  ).then(async (res) => await res.json());
+  const character = await fetch("http://localhost:3000/api/char/get?id=1", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then(async (res) => await res.json());
 
   return (
     <main className="mx-auto mt-10 flex w-full flex-col items-center justify-between">
