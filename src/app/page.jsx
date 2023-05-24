@@ -1,14 +1,11 @@
 import Character from "@/components/Character";
-import Chat from "@/components/Chat";
 import ChatBox from "@/components/ChatBox";
-import Input from "@/components/Input";
 
 export default async function Home() {
   const character = await fetch("http://localhost:3000/api/char/get?id=1", {
     headers: {
       "Content-Type": "application/json",
     },
-    cache: "no-cache",
   }).then(async (res) => await res.json());
 
   return (

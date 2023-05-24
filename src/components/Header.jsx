@@ -8,7 +8,6 @@ export default async function Header() {
     headers: {
       "Content-Type": "application/json",
     },
-    cache: "no-cache",
   }).then(async (res) => await res.json());
 
   return (

@@ -30,24 +30,32 @@ export default function ChatBox({ firstMessage }) {
     let newMsg = { content: message, response: "" };
     setHistory([...history, newMsg]);
     generateAnswer(message).then((answer) => {
-      const inserted = [...history];
-      newMsg.response = answer.message.content;
-      inserted.push(newMsg);
-      setHistory(inserted);
-      generating.current = false;
+      const response = answer.message.content;
+      generateSpeech(response.replaceAll(/(?:\r\n|\r|\n)/g, ".")).then(
+        (base64) => {
+          const audio = base64.audioContent;
+          const inserted = [...history];
+          newMsg.response = response;
+          inserted.push(newMsg);
+          setHistory(inserted);
+          generating.current = false;
 
-      fetch("http://localhost:3000/api/message/add", {
-        method: "POST",
-        body: JSON.stringify({
-          content: message,
-          response: answer.message.content,
-          userId: 1,
-          charId: 1,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+          new Audio(`data:audio/ogg;base64,${audio}`).play();
+
+          fetch("http://localhost:3000/api/message/add", {
+            method: "POST",
+            body: JSON.stringify({
+              content: message,
+              response: response,
+              userId: 1,
+              charId: 1,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+        }
+      );
     });
   };
 
@@ -63,6 +71,21 @@ export default function ChatBox({ firstMessage }) {
       body: JSON.stringify({
         content: prompt,
         history: previousMessages,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const answer = await response.json();
+    return answer;
+  };
+
+  const generateSpeech = async (content) => {
+    const response = await fetch("http://localhost:3000/api/tts", {
+      method: "POST",
+      body: JSON.stringify({
+        content,
       }),
       headers: {
         "Content-Type": "application/json",

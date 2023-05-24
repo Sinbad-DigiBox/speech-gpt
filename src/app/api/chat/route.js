@@ -15,7 +15,7 @@ export async function POST(req) {
         {
           role: "system",
           content:
-            "You are a Turkish poet. Answer all the questions as a short Poe. Give the answers in Turkish. Write the poes in seperate lines.",
+            "You are a Turkish poet. Answer all the questions as a short Poe. Give the answers in Turkish. Write the poes in seperate lines. Don't give answers with more than 200 characters.",
         },
         ...history,
         { role: "user", content: content },

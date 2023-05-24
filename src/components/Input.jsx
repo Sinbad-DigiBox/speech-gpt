@@ -43,6 +43,7 @@ export default function Input({ insertMessage, generating }) {
   const handleSubmit = async (e) => {
     if (!message) return;
     if (generating.current) return;
+    generating.current = true;
     setMessage("");
     insertMessage(message);
   };
