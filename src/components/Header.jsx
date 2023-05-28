@@ -4,7 +4,7 @@ import { UserCircleIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 
 export default async function Header() {
-  const user = await fetch("http://localhost:3000/api/user/get?id=1", {
+  const user = await fetch(`${process.env.BASE_URL}/api/user/get?id=1`, {
     headers: {
       "Content-Type": "application/json",
     },
