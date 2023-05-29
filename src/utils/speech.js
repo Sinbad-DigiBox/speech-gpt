@@ -14,7 +14,7 @@ export const textToSpeech = async (content) => {
   };
   const response = await fetch(
     "https://texttospeech.googleapis.com/v1/text:synthesize?key=" +
-      process.env.NEXT_PUBLIC_GOOGLE_KEY,
+      process.env.GOOGLE_KEY,
     {
       method: "POST",
       headers: {
@@ -42,7 +42,7 @@ export const speechToText = async (content) => {
 
   const googleResponse = await fetch(
     "https://speech.googleapis.com/v1p1beta1/speech:recognize?key=" +
-      process.env.NEXT_PUBLIC_GOOGLE_KEY,
+      process.env.GOOGLE_KEY,
     {
       method: "POST",
       headers: {

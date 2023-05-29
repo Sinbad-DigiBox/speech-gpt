@@ -2,7 +2,7 @@ import { Configuration, OpenAIApi } from "openai";
 
 const createCompletion = async (content, history, trait) => {
   const configuration = new Configuration({
-    apiKey: process.env.NEXT_PUBLIC_GPT_KEY,
+    apiKey: process.env.GPT_KEY,
   });
   const openai = new OpenAIApi(configuration);
   const completion = await openai

@@ -9,7 +9,7 @@ import Image from "next/image";
 import { useEffect, useReducer, useRef, useState } from "react";
 import { speechToText } from "@/utils/speech";
 
-export default function Input({ insertMessage, generating }) {
+export default function Input({ insertMessage, generating, generateText }) {
   const [message, setMessage] = useState("");
   const [recording, setRecording] = useState(false);
   const [timer, dispatch] = useReducer(reducer, 0);
@@ -91,7 +91,7 @@ export default function Input({ insertMessage, generating }) {
             reader.onloadend = async () => {
               base64 = reader.result.split(",")[1];
 
-              const textObject = await speechToText(base64);
+              const textObject = await generateText(base64);
               const transcript = textObject.transcript;
               setMessage(
                 transcript

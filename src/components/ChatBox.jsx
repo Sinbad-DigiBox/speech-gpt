@@ -9,6 +9,7 @@ export default function ChatBox({
   charId,
   generateAnswer,
   generateSpeech,
+  generateText,
   getMessages,
   addMessages,
   trait,
@@ -63,7 +64,11 @@ export default function ChatBox({
         lastMessage={lastMessage}
         audio={audioObj}
       />
-      <Input insertMessage={(m) => insertMessage(m)} generating={generating} />
+      <Input
+        insertMessage={(m) => insertMessage(m)}
+        generating={generating}
+        generateText={generateText}
+      />
     </>
   );
 }

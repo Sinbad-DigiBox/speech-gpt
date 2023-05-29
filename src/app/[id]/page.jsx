@@ -2,7 +2,7 @@ import Character from "@/components/Character";
 import ChatBox from "@/components/ChatBox";
 import getCharacter from "@/utils/char";
 import createCompletion from "@/utils/chat";
-import { textToSpeech } from "@/utils/speech";
+import { speechToText, textToSpeech } from "@/utils/speech";
 import { addMessage, getMessage } from "@/utils/message";
 
 export default async function Chat({ params }) {
@@ -40,6 +40,13 @@ export default async function Chat({ params }) {
     return response;
   };
 
+  const generateText = async (content) => {
+    "use server";
+
+    const response = await speechToText(content);
+    return response;
+  };
+
   return (
     <main className="mx-auto mt-10 flex w-full flex-col items-center justify-between">
       <div className="mx-auto flex w-full justify-evenly">
@@ -52,6 +59,7 @@ export default async function Chat({ params }) {
             charId={params.id}
             generateAnswer={generateAnswer}
             generateSpeech={generateSpeech}
+            generateText={generateText}
             addMessages={addMessages}
             getMessages={fetchMessages}
             trait={character.system}
