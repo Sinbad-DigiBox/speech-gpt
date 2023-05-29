@@ -4,12 +4,12 @@ import Link from "next/link";
 import Menu from "./Menu";
 import getUser from "@/utils/user";
 
-export default async function Header() {
+export default async function Header({ characters }) {
   const user = await getUser(1);
 
   return (
     <header className="flex w-full items-center justify-between">
-      <Menu />
+      <Menu characters={characters} />
       <Link
         href="/"
         className="relative flex place-items-center after:absolute after:-z-20 after:h-[160px] after:w-[300px] after:bg-gradient-radial after:from-sky-500 after:via-[#2f4da7] after:opacity-60 after:blur-2xl after:content-['']"

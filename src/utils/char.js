@@ -1,6 +1,6 @@
 import db from "./db";
 
-const getCharacter = async (charId) => {
+export const getCharacter = async (charId) => {
   const character = await db.character.findUnique({
     where: { id: parseInt(charId) },
   });
@@ -8,4 +8,8 @@ const getCharacter = async (charId) => {
   return character;
 };
 
-export default getCharacter;
+export const getCharacters = async () => {
+  const character = await db.character.findMany();
+
+  return character;
+};

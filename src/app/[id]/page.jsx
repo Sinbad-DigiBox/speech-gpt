@@ -1,6 +1,6 @@
 import Character from "@/components/Character";
 import ChatBox from "@/components/ChatBox";
-import getCharacter from "@/utils/char";
+import { getCharacter } from "@/utils/char";
 import createCompletion from "@/utils/chat";
 import { speechToText, textToSpeech } from "@/utils/speech";
 import { addMessage, getMessage } from "@/utils/message";
