@@ -13,7 +13,7 @@ export default function Character({ character }) {
           quality={100}
           priority
         />
-        <div className="absolute bottom-0 z-10 h-24 w-full bg-gradient-to-t from-white to-transparent dark:from-background" />
+        <div className="absolute bottom-0 z-10 h-24 w-full bg-gradient-to-t from-background to-transparent" />
       </div>
       <div className="space-y-1 py-4 text-center">
         <h1 className="text-3xl">

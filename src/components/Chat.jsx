@@ -5,7 +5,13 @@ import Response from "@/components/Response";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 
-export default function Chat({ firstMessage, history, loading }) {
+export default function Chat({
+  firstMessage,
+  history,
+  loading,
+  lastMessage,
+  audio,
+}) {
   const anchor = useRef();
 
   useEffect(() => {
@@ -34,7 +40,11 @@ export default function Chat({ firstMessage, history, loading }) {
         history.map((e) => (
           <div className="space-y-8" key={crypto.randomUUID()}>
             <Message message={e.content} />
-            <Response message={e.response} />
+            <Response
+              message={e.response}
+              lastMessage={lastMessage}
+              audio={audio}
+            />
           </div>
         ))
       )}

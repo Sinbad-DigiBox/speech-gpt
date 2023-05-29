@@ -7,6 +7,7 @@ import {
 } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import { useEffect, useReducer, useRef, useState } from "react";
+import { speechToText } from "@/utils/speech";
 
 export default function Input({ insertMessage, generating }) {
   const [message, setMessage] = useState("");
@@ -90,21 +91,15 @@ export default function Input({ insertMessage, generating }) {
             reader.onloadend = async () => {
               base64 = reader.result.split(",")[1];
 
-              await fetch("/api/stt", {
-                method: "POST",
-                body: JSON.stringify({ content: base64 }),
-              })
-                .then(async (res) => await res.json())
-                .then((json) => {
-                  const transcript = json.transcript;
-                  setMessage(
-                    transcript
-                      ? json.transcript[0].toUpperCase() +
-                          json.transcript.slice(1)
-                      : ""
-                  );
-                  setRecording(false);
-                });
+              const textObject = await speechToText(base64);
+              const transcript = textObject.transcript;
+              setMessage(
+                transcript
+                  ? textObject.transcript[0].toUpperCase() +
+                      textObject.transcript.slice(1)
+                  : ""
+              );
+              setRecording(false);
             };
           };
 

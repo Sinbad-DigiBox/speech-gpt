@@ -21,6 +21,7 @@ model Character {
   name         String
   description  String
   firstMessage String
+  system       String
   messages     Message[]
 }
 

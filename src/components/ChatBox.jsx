@@ -4,101 +4,65 @@ import { useEffect, useRef, useState } from "react";
 import Chat from "./Chat";
 import Input from "./Input";
 
-export default function ChatBox({ firstMessage }) {
+export default function ChatBox({
+  firstMessage,
+  charId,
+  generateAnswer,
+  generateSpeech,
+  getMessages,
+  addMessages,
+  trait,
+}) {
   const [loading, setLoading] = useState(true);
   const [history, setHistory] = useState([]);
+  const [lastMessage, setLastMessage] = useState();
+  const [audioObj, setAudioObj] = useState();
   const generating = useRef(false);
 
   useEffect(() => {
     const fetchMessages = async () => {
-      const messages = await fetch(
-        `${process.env.BASE_URL}/api/message/get?user=1&char=1`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          cache: "no-cache",
-        }
-      ).then(async (res) => await res.json());
+      const messages = await getMessages(charId);
       setHistory(messages);
       setLoading(false);
     };
     fetchMessages();
   }, []);
 
-  const insertMessage = (message) => {
+  const insertMessage = async (message) => {
     let newMsg = { content: message, response: "" };
     setHistory([...history, newMsg]);
-    generateAnswer(message).then((answer) => {
-      const response = answer.message.content;
-      generateSpeech(response.replaceAll(/(?:\r\n|\r|\n)/g, ".")).then(
-        (base64) => {
-          const audio = base64.audioContent;
-          const inserted = [...history];
-          newMsg.response = response;
-          inserted.push(newMsg);
-          setHistory(inserted);
-          generating.current = false;
 
-          new Audio(`data:audio/ogg;base64,${audio}`).play();
+    const answer = await generateAnswer(message, history, trait);
+    const response = answer.message.content;
 
-          fetch(`${process.env.BASE_URL}/api/message/add`, {
-            method: "POST",
-            body: JSON.stringify({
-              content: message,
-              response: response,
-              userId: 1,
-              charId: 1,
-            }),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-        }
-      );
-    });
-  };
+    const base64 = await generateSpeech(
+      response.replaceAll(/(?:\r\n|\r|\n)/g, ".")
+    );
+    const audio = base64.audioContent;
+    const a = new Audio(`data:audio/ogg;base64,${audio}`);
+    setAudioObj(a);
+    a.play();
 
-  const generateAnswer = async (prompt) => {
-    const previousMessages = [];
-    history.forEach((e) => {
-      previousMessages.push({ role: "user", content: e.content });
-      previousMessages.push({ role: "assistant", content: e.response });
-    });
+    const inserted = [...history];
+    newMsg.response = response;
+    inserted.push(newMsg);
 
-    const response = await fetch(`${process.env.BASE_URL}/api/chat`, {
-      method: "POST",
-      body: JSON.stringify({
-        content: prompt,
-        history: previousMessages,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    setHistory(inserted);
+    setLastMessage(response);
+    generating.current = false;
 
-    const answer = await response.json();
-    return answer;
-  };
-
-  const generateSpeech = async (content) => {
-    const response = await fetch(`${process.env.BASE_URL}/api/tts`, {
-      method: "POST",
-      body: JSON.stringify({
-        content,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    const answer = await response.json();
-    return answer;
+    addMessages(message, response, charId);
   };
 
   return (
     <>
-      <Chat firstMessage={firstMessage} loading={loading} history={history} />
+      <Chat
+        firstMessage={firstMessage}
+        loading={loading}
+        history={history}
+        lastMessage={lastMessage}
+        audio={audioObj}
+      />
       <Input insertMessage={(m) => insertMessage(m)} generating={generating} />
     </>
   );
