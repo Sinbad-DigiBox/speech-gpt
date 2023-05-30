@@ -5,14 +5,14 @@ import Chat from "./Chat";
 import Input from "./Input";
 
 export default function ChatBox({
-  firstMessage,
+  character,
   charId,
   generateAnswer,
   generateSpeech,
   generateText,
   getMessages,
   addMessages,
-  trait,
+  deleteMessages,
 }) {
   const [loading, setLoading] = useState(true);
   const [history, setHistory] = useState([]);
@@ -33,11 +33,15 @@ export default function ChatBox({
     let newMsg = { content: message, response: "" };
     setHistory([...history, newMsg]);
 
-    const answer = await generateAnswer(message, history, trait);
+    const answer = await generateAnswer(message, history, character.system);
     const response = answer.message.content;
 
     const base64 = await generateSpeech(
-      response.replaceAll(/(?:\r\n|\r|\n)/g, ".")
+      response.replaceAll(/(?:\r\n|\r|\n)/g, "."),
+      character.gender,
+      character.soundSpeed,
+      character.soundPitch,
+      character.soundName
     );
     const audio = base64.audioContent;
     const a = new Audio(`data:audio/ogg;base64,${audio}`);
@@ -58,7 +62,7 @@ export default function ChatBox({
   return (
     <>
       <Chat
-        firstMessage={firstMessage}
+        firstMessage={character.firstMessage}
         loading={loading}
         history={history}
         lastMessage={lastMessage}
@@ -68,6 +72,9 @@ export default function ChatBox({
         insertMessage={(m) => insertMessage(m)}
         generating={generating}
         generateText={generateText}
+        deleteMessages={deleteMessages}
+        charId={charId}
+        setHistory={setHistory}
       />
     </>
   );

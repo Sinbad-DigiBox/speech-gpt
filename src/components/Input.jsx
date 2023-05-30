@@ -4,12 +4,19 @@ import {
   MicrophoneIcon,
   PaperAirplaneIcon,
   StopIcon,
+  TrashIcon,
 } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import { useEffect, useReducer, useRef, useState } from "react";
-import { speechToText } from "@/utils/speech";
 
-export default function Input({ insertMessage, generating, generateText }) {
+export default function Input({
+  insertMessage,
+  generating,
+  generateText,
+  deleteMessages,
+  charId,
+  setHistory,
+}) {
   const [message, setMessage] = useState("");
   const [recording, setRecording] = useState(false);
   const [timer, dispatch] = useReducer(reducer, 0);
@@ -117,66 +124,80 @@ export default function Input({ insertMessage, generating, generateText }) {
 
   return (
     <div className="flex items-center gap-x-5">
-      <div
-        className={`relative flex w-full items-center justify-center gap-x-4 overflow-hidden rounded-full border-2 pr-4 after:absolute after:right-0 after:z-10 after:h-full after:w-full after:rounded-full after:bg-white after:duration-300 after:content-[''] ${
-          recording ? `after:translate-x-0` : `after:translate-x-full`
-        }`}
-      >
-        <input
-          type="text"
-          value={message}
-          onChange={(e) => handleInput(e)}
-          placeholder="Mesajınızı girin"
-          onKeyDown={(e) => {
-            if (e.key == "Enter") {
-              handleSubmit(e);
-            }
+      <div className="relative flex w-full flex-col">
+        <button
+          onClick={() => {
+            deleteMessages(charId);
+            setHistory([]);
           }}
-          className="w-full bg-transparent px-5 py-4 text-xl text-white focus:outline-none"
-        />
+          className="group absolute left-0 right-0 mx-auto flex h-8 w-12 origin-left -translate-y-8 items-center justify-center gap-x-2 overflow-hidden rounded-full rounded-b-none bg-white text-background duration-150 ease-in-out hover:w-40"
+        >
+          <TrashIcon className="h-5 w-5 text-background" />
+          <p className="hidden whitespace-nowrap group-hover:block">
+            Mesajları sil
+          </p>
+        </button>
         <div
-          className={`absolute z-30 text-black ${
-            recording ? "block" : "hidden"
+          className={`relative flex items-center justify-center gap-x-4 overflow-hidden rounded-full border-2 bg-background pr-4 after:absolute after:right-0 after:z-10 after:h-full after:w-full after:rounded-full after:bg-white after:duration-300 after:content-[''] ${
+            recording ? `after:translate-x-0` : `after:translate-x-full`
           }`}
         >
-          {interval.current ? (
-            <div className="flex items-center gap-x-2">
-              <svg
-                className="h-3 w-3 animate-pulse"
-                viewBox="0 0 100 100"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="50"
-                  fill="red"
-                  className="h-full w-full"
-                />
-              </svg>
-              <p className="leading-none">{`00:0${timer}`}</p>
-              <div className="h-2 w-44 rounded-full border border-background border-opacity-40">
-                <div
-                  className="h-full w-0 bg-background duration-300 ease-in-out"
-                  id="progress-bar"
-                />
+          <input
+            type="text"
+            value={message}
+            onChange={(e) => handleInput(e)}
+            placeholder="Mesajınızı girin"
+            onKeyDown={(e) => {
+              if (e.key == "Enter") {
+                handleSubmit(e);
+              }
+            }}
+            className="w-full bg-transparent px-5 py-4 text-xl text-white focus:outline-none"
+          />
+          <div
+            className={`absolute z-30 text-black ${
+              recording ? "block" : "hidden"
+            }`}
+          >
+            {interval.current ? (
+              <div className="flex items-center gap-x-2">
+                <svg
+                  className="h-3 w-3 animate-pulse"
+                  viewBox="0 0 100 100"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="50"
+                    fill="red"
+                    className="h-full w-full"
+                  />
+                </svg>
+                <p className="leading-none">{`00:0${timer}`}</p>
+                <div className="h-2 w-44 rounded-full border border-background border-opacity-40">
+                  <div
+                    className="h-full w-0 bg-background duration-300 ease-in-out"
+                    id="progress-bar"
+                  />
+                </div>
               </div>
-            </div>
+            ) : (
+              <Image src="/loading.svg" alt="Spinner" width={35} height={35} />
+            )}
+          </div>
+          {recording ? (
+            <StopIcon
+              onClick={stopRecord}
+              className="z-20 h-10 w-10 cursor-pointer text-black duration-300"
+            />
           ) : (
-            <Image src="/loading.svg" alt="Spinner" width={35} height={35} />
+            <MicrophoneIcon
+              onClick={record}
+              className="z-20 h-10 w-10 cursor-pointer duration-300"
+            />
           )}
         </div>
-        {recording ? (
-          <StopIcon
-            onClick={stopRecord}
-            className="z-20 h-10 w-10 cursor-pointer text-black duration-300"
-          />
-        ) : (
-          <MicrophoneIcon
-            onClick={record}
-            className="z-20 h-10 w-10 cursor-pointer duration-300"
-          />
-        )}
       </div>
       <div
         onClick={(e) => handleSubmit(e)}

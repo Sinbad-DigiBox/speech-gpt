@@ -3,7 +3,7 @@ import ChatBox from "@/components/ChatBox";
 import { getCharacter } from "@/utils/char";
 import createCompletion from "@/utils/chat";
 import { speechToText, textToSpeech } from "@/utils/speech";
-import { addMessage, getMessage } from "@/utils/message";
+import { addMessage, getMessage, flushMessages } from "@/utils/message";
 
 export default async function Chat({ params }) {
   const character = await getCharacter(params.id);
@@ -33,10 +33,16 @@ export default async function Chat({ params }) {
     return response;
   };
 
-  const generateSpeech = async (content) => {
+  const generateSpeech = async (content, gender, speed, pitch, soundName) => {
     "use server";
 
-    const response = await textToSpeech(content);
+    const response = await textToSpeech(
+      content,
+      gender,
+      speed,
+      pitch,
+      soundName
+    );
     return response;
   };
 
@@ -44,6 +50,13 @@ export default async function Chat({ params }) {
     "use server";
 
     const response = await speechToText(content);
+    return response;
+  };
+
+  const deleteMessages = async (charId) => {
+    "use server";
+
+    const response = await flushMessages(charId);
     return response;
   };
 
@@ -55,14 +68,14 @@ export default async function Chat({ params }) {
         </div>
         <div className="flex h-[44rem] w-1/2 flex-col space-y-20">
           <ChatBox
-            firstMessage={character.firstMessage}
+            character={character}
             charId={params.id}
             generateAnswer={generateAnswer}
             generateSpeech={generateSpeech}
             generateText={generateText}
             addMessages={addMessages}
             getMessages={fetchMessages}
-            trait={character.system}
+            deleteMessages={deleteMessages}
           />
         </div>
       </div>

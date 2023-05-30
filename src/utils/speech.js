@@ -1,15 +1,23 @@
-export const textToSpeech = async (content) => {
+export const textToSpeech = async (
+  content,
+  gender,
+  speed,
+  pitch,
+  soundName
+) => {
   const options = {
     input: {
       text: content,
     },
     voice: {
       languageCode: "tr-TR",
-      name: "tr-TR-Standard-E",
-      ssmlGender: "MALE",
+      name: soundName,
+      ssmlGender: gender,
     },
     audioConfig: {
       audioEncoding: "MP3",
+      speakingRate: speed,
+      pitch,
     },
   };
   const response = await fetch(

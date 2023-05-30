@@ -15,3 +15,13 @@ export const addMessage = async (content, response, userId, charId) => {
 
   return { message: "Message added." };
 };
+
+export const flushMessages = async (charId) => {
+  const flush = await db.message.deleteMany({
+    where: {
+      charId: parseInt(charId),
+    },
+  });
+
+  return { message: "Messages deleted." };
+};
