@@ -21,6 +21,11 @@ model Character {
   name         String
   description  String
   firstMessage String
+  system       String
+  gender       String
+  soundName    String
+  soundSpeed   Float
+  soundPitch   Float
   messages     Message[]
 }
 
